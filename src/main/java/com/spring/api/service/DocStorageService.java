@@ -25,7 +25,7 @@ import com.spring.api.repositories.DocumentoRepository;
 import com.spring.api.repositories.ProspectoRepository;
 
 @Service
-public class DocStorageService {
+public class DocStorageService implements IProspectosService{
 	
 	private final Path root = Paths.get("uploads");
 	
@@ -35,18 +35,7 @@ public class DocStorageService {
 	@Autowired
 	private ProspectoRepository prospectoRepository;
 	
-	public void init() {
-		try {
-			
-			Files.createDirectory(root);
-			System.out.println("Se creo la carpeta");
-			
-		} catch (IOException e) {
-			throw new RuntimeException("No se puede iniciar el storage");
-		}
-		
-	}
-	
+	@Override
 	public void save(MultipartFile[] files,Prospecto prospecto) {
 	    try {
 	    	prospectoRepository.save(prospecto);
@@ -66,13 +55,13 @@ public class DocStorageService {
 	      } 
 	}
 	
-	
+	@Override
 	public List<Documento> getFiles(Integer id){
 		Prospecto prospecto = prospectoRepository.findById(id).orElse(null);
 		return prospecto.getDocumentos();
 	}
 	
-	
+	@Override
 	public Prospecto editar(Integer id, Prospecto prospecto) {		
 		Prospecto Prospecto_viejo = prospectoRepository.findById(id).orElse(null);
 		Prospecto_viejo.setNombre(prospecto.getNombre());
@@ -89,9 +78,15 @@ public class DocStorageService {
 		return Prospecto_viejo;
 	}
 	
+	@Override
 	public List<Prospecto> Listado(){
 		List<Prospecto> lista = (List<Prospecto>) prospectoRepository.findAll();
 		return lista;
+	}
+
+	@Override
+	public Prospecto BuscarPorId(Integer id) {
+		return prospectoRepository.findById(id).orElse(null);
 	}
 	
 }

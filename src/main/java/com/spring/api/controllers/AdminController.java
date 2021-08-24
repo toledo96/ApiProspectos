@@ -25,6 +25,7 @@ import com.spring.api.models.entity.Prospecto;
 import com.spring.api.repositories.DocumentoRepository;
 import com.spring.api.repositories.ProspectoRepository;
 import com.spring.api.service.DocStorageService;
+import com.spring.api.service.IProspectosService;
 
 @RestController
 @CrossOrigin("*")
@@ -34,7 +35,7 @@ public class AdminController {
 	private ProspectoRepository prospectoRepository;
 	
 	@Autowired
-	private DocStorageService service;
+	private IProspectosService service;
 
 	@PostMapping("/agregar")
 	public boolean  guardar(Prospecto prospecto, @RequestParam("files") MultipartFile[] files){
@@ -54,8 +55,8 @@ public class AdminController {
 	}
 	
 	@GetMapping("/prospecto/{id}")
-	public Optional<Prospecto> encontrado(@PathVariable Integer id) {
-		return prospectoRepository.findById(id);
+	public Prospecto encontrado(@PathVariable Integer id) {
+		return service.BuscarPorId(id);
 	}
 	
 	@PutMapping("/prospecto/editar/{id}")
